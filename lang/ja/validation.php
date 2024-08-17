@@ -162,7 +162,8 @@ return [
     'contact' => 'お問い合わせ内容',
     'caution' => '注意事項',
     'title' => '件名',
-    'content' => '本文'
+    'content' => '本文',
+    'item_name' => '商品名',
     ],
 
 ];
