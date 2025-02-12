@@ -1,15 +1,14 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
-import { reactive } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import {useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
     item: Object
 })
 
-const form = reactive({
+const form = useForm({
     id: props.item.id,
     name: props.item.name,
     memo: props.item.memo,
@@ -18,7 +17,17 @@ const form = reactive({
 })
 
 const updateItem = id => {
-    Inertia.put(route('items.update', { item: id }), form)
+    form.put(`/items/${id}`, {
+        preserveScroll: true,
+        onError: () => {
+            // エラー時の処理をここに追加できます
+            console.log('failed')
+        },
+        onSuccess: () => {
+            // 成功時の処理をここに追加できます
+            console.log('Form submitted successfully')
+        },
+    })
 }
 
 

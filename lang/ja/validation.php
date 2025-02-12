@@ -151,5 +151,5 @@ return [
     'url'                  => ':Attributeは、有効なURL形式で指定してください。',
     'uuid'                 => ':Attributeは、有効なUUIDである必要があります。',
 
-    'attributes' => ['name' => '名前', 'memo' => 'メモ', 'price' => '価格'],
+    'attributes' => ['name' => '商品名', 'memo' => 'メモ', 'price' => '価格'],
 ];

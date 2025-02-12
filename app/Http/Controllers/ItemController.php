@@ -32,11 +32,14 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
-        Item::create([
-            'name' => $request->name,
-            'memo' => $request->memo,
-            'price' => $request->price,
+
+        $validated = $request->validate([
+            'name' => ['required', 'max:255'],
+            'memo' => ['required', 'max:255'],
+            'price' => ['required', 'numeric'],
         ]);
+
+        Item::create($validated);
 
         return to_route('items.index')
             ->with([
@@ -88,6 +91,11 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        $item->delete();
+        return to_route('items.index')
+            ->with([
+                'message' => '削除しました。',
+                'status' => 'danger'
+            ]);
     }
 }
