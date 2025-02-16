@@ -2,10 +2,21 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import FlashMessage from "@/Components/FlashMessage.vue";
+import Pagination from '@/Components/Pagination.vue'
+import { ref } from 'vue'
+import { Inertia } from '@inertiajs/inertia';
 
 defineProps({
-    customers: Array
+    customers: Object
 })
+
+const search = ref('')
+
+// ref の値を取得するには .valueが必要
+const searchCustomers = () => {
+    Inertia.get(route('customers.index', { search: search.value }))
+}
+
 </script>
 
 <template>
@@ -25,6 +36,10 @@ defineProps({
                             <div class="container px-5 py-8 mx-auto">
                                 <FlashMessage />
                                 <div class="flex pl-4 my-4 lg:w-2/3 w-full mx-auto">
+                                    <div>
+                                        <input type="text" name="search" v-model="search">
+                                        <button class="bg-blue-300 text-white py-2 px-2" @click="searchCustomers">検索</button>
+                                    </div>
                                 <Link as="button" :href="route('customers.create')" class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">顧客登録</Link>
                                 </div>
                                 <div class="lg:w-2/3 w-full mx-auto overflow-auto">
@@ -38,7 +53,7 @@ defineProps({
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="customer in customers" :key="customer.id">
+                                        <tr v-for="customer in customers.data" :key="customer.id">
                                             <td class="border-b-2 border-gray-200 px-4 py-3">
                                                 {{ customer.id }}
                                             </td>
@@ -50,6 +65,7 @@ defineProps({
                                     </table>
                                 </div>
                             </div>
+                            <Pagination class="mt-6" :links="customers.links"></Pagination>
                         </section>
                     </div>
                 </div>
