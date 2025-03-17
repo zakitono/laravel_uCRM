@@ -4,6 +4,31 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\InertiaTestController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PurchaseController;
+
+Route::resource('items', \App\Http\Controllers\ItemController::class)
+    ->middleware(['auth', 'verified']);
+
+Route::resource('customers', \App\Http\Controllers\CustomerController::class)
+    ->middleware(['auth', 'verified']);
+
+Route::resource('purchases', \App\Http\Controllers\PurchaseController::class)
+    ->middleware(['auth', 'verified']);
+
+
+Route::get('/inertia-test', function () {
+    return Inertia::render('InertiaTest');
+});
+
+Route::get('/inertia/index', [InertiaTestController::class, 'index'])->name('inertia.index');
+Route::get('/inertia/create', [InertiaTestController::class, 'create'])->name('inertia.create');
+Route::post('/inertia', [InertiaTestController::class, 'store'])->name('inertia.store');
+Route::get('/inertia/show{id}', [InertiaTestController::class, 'show'])->name('inertia.show');
+
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
