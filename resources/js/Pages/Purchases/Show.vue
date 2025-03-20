@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, Link, useForm} from '@inertiajs/vue3';
+import {Head, Link, router, useForm} from '@inertiajs/vue3';
 import {onMounted, ref, computed} from 'vue';
 import dayjs from "dayjs";
 
@@ -16,6 +16,11 @@ onMounted(() => {
     console.log(props.order);
 
 })
+
+const goToEditPage = () => {
+    router.visit(route('purchases.edit', { purchase: props.order[0].id })); // props.item でアクセス
+};
+
 
 </script>
 
@@ -102,7 +107,7 @@ onMounted(() => {
                                                 </div>
                                             </div>
                                             <div class="p-2 w-full">
-                                                <button class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">登録する</button>
+                                                <button @click="goToEditPage" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">編集する</button>
                                             </div>
                                         </div>
                                     </div>
