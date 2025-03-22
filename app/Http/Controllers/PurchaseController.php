@@ -100,29 +100,31 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        $purchase = Purchase::find($purchase->id);
-
+//        すべての商品を取得
         $allItems = Item::select('id', 'name', 'price')->get();
 
-        $items = [];
+        // 購入商品の数量、をIDをキーとした連想配列で取得
+        $purchaseItemQuantities = $purchase->items->pluck('pivot.quantity', 'id')->toArray();
 
-        foreach($allItems as $allItem){
-            $quantity = 0;
-            foreach($purchase->items as $item){
-                if($allItem->id === $item->id){
-                    $quantity = $item->pivot->quantity;
-                }
-            }
+        // 商品リストを作成
+        $items = $allItems->map(function($item) use ($purchaseItemQuantities){
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'price' => $item->price,
+                'quantity' => $purchaseItemQuantities[$item->id] ?? 0
+            ];
+        })->toArray();
 
-            array_push($items, [
-                'id' => $allItem->id,
-                'name' => $allItem->name,
-                'price' => $allItem->price,
-                'quantity' => $quantity
-            ]);
-        }
+        $order = Order::groupBy('id')
+        ->where('id', $purchase->id)
+        ->selectRaw('id, customer_id, customer_name, status, created_at')
+        ->get();
 
-        dd($items);
+        return Inertia::render('Purchases/Edit', [
+            'items' => $items,
+            'order' => $order
+        ]);
     }
 
     /**
