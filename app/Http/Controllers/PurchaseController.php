@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
-use App\Models\Purchase;
-use App\Models\Customer;
 use App\Models\Item;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\Purchase;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class PurchaseController extends Controller
 {
@@ -132,7 +131,31 @@ class PurchaseController extends Controller
      */
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
-        //
+//        dd($request, $purchase);
+
+        DB::beginTransaction();
+
+        try{
+            $purchase->status = $request->status;
+            $purchase->save();
+
+            $items = [];
+
+            foreach($request->items as $item){
+                $items = $items + [
+                    $item['id'] => ['quantity' => $item['quantity']
+                    ]
+                ];
+            }
+
+    //        dd($items);
+            $purchase->items()->sync($items);
+
+            DB::commit();
+            return to_route('dashboard');
+        } catch(\Exception $e){
+            DB::rollBack();
+        }
     }
 
     /**
