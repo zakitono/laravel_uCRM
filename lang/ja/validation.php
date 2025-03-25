@@ -159,6 +159,8 @@ return [
         'postcode' => '郵便番号',
         'address' => '住所',
         'birthday' => '誕生日',
-        'gender' => '性別'
+        'gender' => '性別',
+        'title' => 'タイトル',
+        'content' => '内容',
     ],
 ];
