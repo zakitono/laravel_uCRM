@@ -32,14 +32,12 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
-
-        $validated = $request->validate([
-            'name' => ['required', 'max:255'],
-            'memo' => ['required', 'max:255'],
-            'price' => ['required', 'numeric'],
+        Item::create([
+            'name' => $request->name,
+            'memo' => $request->memo,
+            'price' => $request->price,
         ]);
 
-        Item::create($validated);
 
         return to_route('items.index')
             ->with([
@@ -72,6 +70,7 @@ class ItemController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateItemRequest $request, Item $item)
+    // $item　今データベースにあるデータ
     {
         $item->name = $request->name;
         $item->memo = $request->memo;
